@@ -26,6 +26,7 @@ import org.litepal.crud.DataSupport;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -42,7 +43,7 @@ public class ChooseAreaFragment extends Fragment {
 
     private TextView titleText;
 
-    private Button backButteon;
+    private Button backButton;
 
     private ListView listView;
 
@@ -73,7 +74,7 @@ public class ChooseAreaFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.choose_area,container,false);
         titleText = view.findViewById(R.id.title_text);
-        backButteon = view.findViewById(R.id.back_button);
+        backButton = view.findViewById(R.id.back_button);
         listView = view.findViewById(R.id.list_view);
         adapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1,dataList);
         listView.setAdapter(adapter);
@@ -95,7 +96,7 @@ public class ChooseAreaFragment extends Fragment {
                 }
             }
         });
-        backButteon.setOnClickListener(new View.OnClickListener() {
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (currentLevel == LEVEL_COUNTY){
@@ -111,7 +112,7 @@ public class ChooseAreaFragment extends Fragment {
     //查询全国所有的省，优先从数据库查询，如果没有查询到再去服务器查询
     private void queryProvinces() {
         titleText.setText("中国");
-        backButteon.setVisibility(View.GONE);
+        backButton.setVisibility(View.GONE);
         provinceList = DataSupport.findAll(Province.class);
         if (provinceList.size() > 0){
             dataList.clear();
@@ -130,7 +131,7 @@ public class ChooseAreaFragment extends Fragment {
     //查询选中市内的县，优先从数据库查询，如果没有查询到再去服务器上查询
     private void queryCounties() {
         titleText.setText(selectedCity.getCityName());
-        backButteon.setVisibility(View.VISIBLE);
+        backButton.setVisibility(View.VISIBLE);
         countyList = DataSupport.where("cityid = ?",String.valueOf(selectedCity.getId())).find(County.class);
         if (countyList.size() > 0){
             dataList.clear();
@@ -151,7 +152,7 @@ public class ChooseAreaFragment extends Fragment {
     //查询选中省内所有的市，优先从数据库查询，如果没有查询到再去服务器查询
     private void queryCities() {
         titleText.setText(selectedProvince.getProvinceName());
-        backButteon.setVisibility(View.VISIBLE);
+        backButton.setVisibility(View.VISIBLE);
         cityList = DataSupport.where("provinceid = ?",String.valueOf(selectedProvince.getId())).find(City.class);
         if (cityList.size() > 0){
             dataList.clear();
